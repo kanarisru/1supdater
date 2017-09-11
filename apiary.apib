@@ -1,0 +1,88 @@
+FORMAT: 1A
+HOST: http://m97872qf.beget.tech/
+
+# 1С Update API
+
+API для проверки обновлений контактов  контрагентов из внешнего источника через промежуточный сервер PointSrv
+
+## Количествно обновлений 1С [/api/1c/updates/count]
+
+### Получить [GET]
+
++ Response 200 (application/json)
+
+            {
+                "count": "12"
+            }
+
+
+
+## Спискок обновлений [/api/1c/updates]
+
+### Запросить [GET]
+
++ Response 200 (application/json)
+
+            {
+                "companies":  {
+                    "set": [
+                        [
+                            "id"=>"0000019",
+                            "name"=>"ООО Фонарь",
+                            "modified": 1505027906,
+                            "linked_contacts_id"=>["00000201"]
+                        ],
+                        [
+                            "id"=>"new_companies_433049",
+                            "name"=>"ИП Берёзкин",
+                            "modified": 1505028150,
+                            "linked_contacts_id"=>["new_contact_433049"]
+                        ]
+                        
+                    ],
+                    "delete": ["0000016"]
+                },
+                "contacts":  {
+                    "set": [
+                        [
+                            "id"=>"new_contact_433049",
+                            "name"=>"Берёзкин Михаил Петрович",
+                            "modified": 1505019517,
+                            "linked_companies_id"=>["new_companies_433049"]
+                        ],
+                        [
+                            "id"=>"00000201",
+                            "name"=>"Ребров Анатолий Свириович",
+                            "modified": 1505028150,
+                            "linked_companies_id"=>["0000019"]
+                        ]
+                        
+                    ],
+                    "delete": []
+                }
+                
+            }
+
+
+### Сообить об обработанных элементах [POST]
+
++ Request (application/json)
+
+        {
+            "mapping": [
+                {"table": "companies", "1s": "00000022", "amo": "new_companies_433049"},
+                {"table": "contacts", "1s": "00000227", "amo": "new_contact_433049"},
+            ],
+            "processed": [
+                {"table": "companies", "code": "00000022", "modified": 1505028150},
+                {"table": "companies", "code": "0000019", "modified": 1505027906},
+                {"table": "contacts", "code": "00000227", "modified": 1505019517},
+                {"table": "contacts", "code": "00000201", "modified": 1505028150}
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status": "ok"
+        }
